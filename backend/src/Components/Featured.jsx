@@ -2,9 +2,10 @@ import { FaArrowLeft } from "react-icons/fa"
 import videos from "../../dummydata"
 import Video from "./ui/Video"
 import { MoveRight } from "lucide-react"
+import { Link } from "react-router-dom"
 
 export default function FeaturedVideos() {
-    console.log(videos)
+    const top_videos = videos.slice(0,3)
     return (
         <div className="">
            <div className="flex sm:px-[13em] justify-between md:gap-5">
@@ -15,10 +16,10 @@ export default function FeaturedVideos() {
                     </p>
                 </div>
 
-                <p className="font-semibold text-sm md:text-base lg:text-lg flex items-center justify-center gap-5" style={{ color: "var(--text-secondary)" }}> see more <MoveRight/></p>
+                <Link to={"/community-videos"}><p className="font-semibold hover:text-hover text-sm md:text-base lg:text-lg flex items-center justify-center gap-5 text-secondary"> see more <MoveRight/></p></Link>
             </div>
-            <div className="videos flex flex-col sm:flex-row  gap-4 justify-center md:gap-5 mt-4">
-                {videos.map((vid) => (
+            <div className="videos flex flex-col sm:flex-row gap-4 justify-center md:gap-5 mt-4">
+                {top_videos.map((vid) => (
                     <div className="w-full sm:w-1/2 md:w-1/3 lg:w-1/4" key={vid.videoId}>
                         <Video video={vid} />
                     </div>
