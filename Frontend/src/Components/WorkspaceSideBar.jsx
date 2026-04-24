@@ -1,10 +1,7 @@
 import { useState } from "react";
 import { Link, useLocation } from "react-router-dom";
-import { Blocks, LibrarySquare, LogOutIcon, Settings } from "lucide-react";
-
-// use navbar icon from lucide react for the menu button and use a state to toggle the sidebar open and closed on smaller screens and a properly styled sidebar for the workspace navigation with links to different sections of the workspace such as videos, visualizations, settings, etc. and make sure the sidebar is responsive and works well on different screen sizes
-// with selected navbar item highlighted and the rest of the items in the sidebar are styled with a hover effect to indicate they are clickable and the sidebar should be collapsible on smaller screens with a menu button to toggle it open and closed
-// the sidebar should also have a close button on smaller screens to allow users to easily close the sidebar when they are done navigating through it and the sidebar should be styled with a modern and clean design that fits well with the overall aesthetic of the application and the links in the sidebar should be clearly labeled and easy to understand for users to navigate through the different sections of the workspace effectively
+import { Blocks, LibrarySquare, LogOutIcon, Menu, Settings, X } from "lucide-react";
+import supabaseService from "../Services/supaBaseServices";
 
 export default function WorkspaceSideBar() {
     const location = useLocation();
@@ -27,47 +24,46 @@ export default function WorkspaceSideBar() {
         },
     ];
 
-    const [isOpen, setIsOpen] = useState(false);
+    const [isOpen, setIsOpen] = useState(true);
 
     const toggleSidebar = () => {
         setIsOpen(!isOpen);
     };
 
+    const handleLogout = () => {
+        return supabaseService.signOut();
+    }
     return (
-        <div className={`workspace-sidebar h-screen  bg-gray-800 text-white w-64 p-6 ${isOpen ? "block" : "hidden"} md:block`}>
-            <div className="flex items-center justify-between mb-6">
-                <h2 className="text-xl font-bold">Workspace</h2>
-                <button className="md:hidden" onClick={toggleSidebar}>
-                    {isOpen ? "Close" : <Blocks />}
-                </button>
-            </div>
-            <nav className="flex flex-col justify-between h-[calc(100%-4rem)]">
-                <ul className="space-y-4">
-                    {workspaceMenu.map((item) => {
-                        const isActive = location.pathname === item.path;
-                        return (
-                            <li key={item.name}>
-                                <Link
-                                    to={item.path}
-                                    className={`flex items-center gap-3 px-4 py-2 rounded-lg transition-colors duration-300 ${isActive ? "bg-gray-700" : "hover:bg-gray-700"}`}
-                                >
-                                    <item.icon />
-                                    {item.name}
-                                </Link>
-                            </li>
-                        );
-                    })}
-                </ul>
-                <div className="logout">
-                    <Link
-                        to="/logout"
-                        className="flex items-center gap-3 px-4 py-2 rounded-lg transition-colors duration-300 hover:bg-gray-700 mt-6"
-                    >
-                        <LogOutIcon />
-                        Logout
-                    </Link>
+        <div className="nav bg-bg-secondary w-fit w-max-[15vw] h-screen z-50 flex flex-col">
+            <div className="top">
+                <div className="head flex items-center justify-between p-4 border-b gap-10">
+                    <div className={`logo ${isOpen ? "block" : "hidden"}`}>
+                        <h1 className={`text-2xl font-bold text-primary`}>EazyStem</h1>
+                    </div>
+                    <div className="menu-control">
+                        {
+                            isOpen ? <X onClick={toggleSidebar} /> : <Menu onClick={toggleSidebar} />
+                        }
+                    </div>
                 </div>
-            </nav>
+                <nav>
+                    <ul className={`menu flex flex-col gap-4 p-4 ${isOpen ? "block" : "hidden"}`}>
+                        {workspaceMenu.map((item) => (
+                            <Link to={item.path}> <li key={item.name} className={`menu-item flex items-center gap-3 p-2 rounded-lg cursor-pointer ${location.pathname === item.path ? "bg-primary text-white" : "hover:bg-bg-hover text-secondary"}`}>
+                                <item.icon />
+                                {item.name}
+                            </li>
+                            </Link>
+                        ))}
+                    </ul>
+                </nav>
+            </div>
+            <div className={`bottom mt-auto p-4 ${isOpen ? "block" : "hidden"}`}>
+                <div className="menu-item flex items-center gap-3 p-2 rounded-lg cursor-pointer hover:bg-bg-hover text-secondary">
+                    <LogOutIcon />
+                    <Link to="/logout" onClick={handleLogout}>Logout</Link>
+                </div>
+            </div>
         </div>
     );
 }

@@ -1,8 +1,19 @@
 import { Link } from "react-router-dom";
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useUser } from "../Context/userContext";
 
 export default function Navbar() {
   const [open, setOpen] = useState(false);
+  const [user, setUser] = useState(null)
+  const { session, loading } = useUser()
+
+  useEffect(() => {
+    if (loading) {
+      setUser(null);
+    } else {
+      setUser(user)
+    }
+  }, [loading])
 
   return (
     <nav
@@ -114,10 +125,29 @@ export default function Navbar() {
                 "linear-gradient(90deg, var(--primary), var(--accent))",
             }}
           >
-           <Link to={'/login'} className="block w-full text-center">Get Started</Link>
+            <Link to={'/login'} className="block w-full text-center">Get Started</Link>
           </button>
         </div>
       )}
     </nav>
   );
 }
+
+
+
+// const getInfo = ()=>{
+//   return {
+//     name:"EazyStem",
+//     description:"EazyStem is an AI-powered platform that simplifies the process of building and deploying machine learning models. With EazyStem, you can easily create, train, and deploy your models without needing extensive coding knowledge. Our intuitive interface and powerful tools make it easy for anyone to harness the power of AI and bring their ideas to life."
+//   }
+// }
+
+
+// const  useInfo = ({name, description}) => {
+//       return <div>{name}{des} </div>
+//   }
+
+// useInfo({name: "EazyStem", description: "EazyStem he power of AI and bring their ideas to life."})
+
+// <useInfo name="" desc=""/>
+// <useInfo name="" desc=""/>

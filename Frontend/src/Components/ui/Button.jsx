@@ -1,12 +1,10 @@
 import React from "react";
 
-export default function GradientButton({
-  children,
+export default function GradientButton({ children,
   onClick,
   type = "button",
   className = "",
-  disabled = false,
-}) {
+  disabled = false,}) {
   return (
     <button
       type={type}

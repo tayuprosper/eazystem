@@ -1,5 +1,5 @@
 import { createBrowserRouter } from "react-router-dom";
-
+import ProtectedRoute from "./ProtectedRoute";
 
 import MainLayout from "../Layouts/PublicLayout";
 import Signup from "../pages/Signup";
@@ -22,45 +22,50 @@ const router = createBrowserRouter(
     [
         {
             path: "/",
-            element: <MainLayout/>,
+            element: <MainLayout />,
             children: [
                 {
                     index: true,
-                    element: <Home/>
+                    element: <Home />
                 },
                 {
                     path: '/community-videos',
-                    element: <CommunityVideos/>
+                    element: <CommunityVideos />
                 },
                 {
                     path: '/login',
-                    element: <Login/>
+                    element: <Login />
                 },
                 {
                     path: '/signup',
-                    element: <Signup/>
+                    element: <Signup />
                 }
             ]
         },
         {
-            path: "/workspace",
-            element: <WorkSpaceLayout/>,
-             children: [
+            element: <ProtectedRoute isAuthenticated={false} />, // replace with actual authentication logic 
+            children: [
                 {
-                    index: true,
-                    element: <Workspace/>
-                },
-                {
-                    path: '/workspace/library',
-                    element: <Library/>
-                },
-                {
-                    path: '/workspace/settings',
-                    element: <Settings/>
-                },
-                {
+                    path: "/workspace",
+                    element: <WorkSpaceLayout />,
+                    children: [
+                        {
+                            index: true,
+                            element: <Workspace />
+                        },
+                        {
+                            path: '/workspace/library',
+                            element: <Library />
+                        },
+                        {
+                            path: '/workspace/settings',
+                            element: <Settings />
+                        },
+                        {
+                        }
+                    ]
                 }
-             ]
+            ]
         }
     ]
 )
