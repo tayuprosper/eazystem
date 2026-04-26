@@ -8,7 +8,7 @@ import {
 
 import { useParams } from 'react-router-dom';
 import { useEffect, useState } from 'react';
-import { useManim } from '../Hooks/useManim';
+import { useManim, resetManimState } from '../Hooks/useManim';
 
 export default function Workspace() {
     const { prompt } = useParams();
@@ -17,6 +17,15 @@ export default function Workspace() {
     const generateVideoFromPrompt = async (text) => {
         if (text) await generateVideo(text);
     };
+
+    // On mount: if there is no URL prompt this is a fresh workspace session.
+    // Reset any leftover state from a previous session to avoid showing
+    // a stale video or error that belongs to a different topic.
+    useEffect(() => {
+        if (!prompt) {
+            resetManimState();
+        }
+    }, []);
 
     useEffect(() => {
         if (error) {

@@ -32,27 +32,24 @@ export default function Login() {
 
 
     return (
-        <div className="section login py-10 h-screen flex flex-col items-center justify-center">
-            <h1 className="text-2xl font-bold mb-4">Login</h1>
-            <p className="text-primary mb-6">Please enter your credentials to log in.</p>
-            <form className="max-w-xl mx-auto p-6 rounded-lg shadow-md w-1/2 h-1/2 flex flex-col justify-center">
-                <div className="mb-4">
+        <div className="section login py-10 min-h-screen flex flex-col items-center justify-center px-4">
+            <h1 className="text-3xl font-bold mb-2">Login</h1>
+            <p className="text-primary mb-8 text-center">Please enter your credentials to log in.</p>
+            <form className="w-full max-w-md p-8 rounded-2xl shadow-xl border border-gray-100 flex flex-col gap-4">
+                <div>
                     <label htmlFor="email" className="block text-primary font-semibold mb-2">Email</label>
-                    <input type="email" id="email" className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring focus:ring-primary" placeholder="Enter your email" value={email} onChange={(e) => setEmail(e.target.value)} />
+                    <input type="email" id="email" className="w-full border border-gray-300 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-primary/20 transition-all" placeholder="Enter your email" value={email} onChange={(e) => setEmail(e.target.value)} />
                 </div>
-                <div className="mb-6">
+                <div>
                     <label htmlFor="password" className="block text-primary font-semibold mb-2">Password</label>
-                    <input type="password" id="password" className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring focus:ring-primary" placeholder="Enter your password" value={password} onChange={(e) => setPassword(e.target.value)} />
+                    <input type="password" id="password" className="w-full border border-gray-300 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-primary/20 transition-all" placeholder="Enter your password" value={password} onChange={(e) => setPassword(e.target.value)} />
                 </div>
-                {/* add error message in the center */}
-                {error && <p className="text-red-500 text-center m-2">{error}</p>}
-                <GradientButton type="submit" className="w-full bg-primary text-white  flex items-center justify-center font-semibold py-2 rounded-lg hover:bg-primary-dark transition duration-300" onClick={handleLogin}>
-                    {/* add loading icon animated in the center of the button    */}
-                    {loading ? <Loader2 className="animate-spin " /> : "Login"}
+                {error && <p className="text-red-500 text-sm text-center font-medium">{error}</p>}
+                <GradientButton type="submit" className="w-full bg-primary text-white flex items-center justify-center font-bold py-3 rounded-xl hover:shadow-lg transition-all" onClick={handleLogin}>
+                    {loading ? <Loader2 className="animate-spin" /> : "Login"}
                 </GradientButton>
             </form>
-            {/* sign up link */}
-            <p className="text-gray-600 mt-4">Don't have an account? <Link to="/signup" className="text-primary font-semibold hover:underline">Sign up</Link></p>
+            <p className="text-gray-600 mt-6">Don't have an account? <Link to="/signup" className="text-primary font-semibold hover:underline">Sign up</Link></p>
         </div>
     )
 }

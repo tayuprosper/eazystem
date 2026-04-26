@@ -15,7 +15,7 @@ export default function Settings() {
 
             <div className="flex flex-col md:flex-row gap-8 min-h-[calc(100vh-12rem)] pb-20">
                 {/* Sidebar */}
-                <div className="w-full md:w-64 flex flex-col gap-2 shrink-0">
+                <div className="w-full md:w-64 flex flex-row md:flex-col gap-2 shrink-0 overflow-x-auto md:overflow-x-visible pb-4 md:pb-0 no-scrollbar">
                     <TabButton 
                         active={activeTab === 'profile'} 
                         onClick={() => setActiveTab('profile')} 
@@ -32,7 +32,7 @@ export default function Settings() {
                         active={activeTab === 'billing'} 
                         onClick={() => setActiveTab('billing')} 
                         icon={<CreditCard size={20} />} 
-                        label="Billing & Usage" 
+                        label="Billing" 
                     />
                 </div>
 
@@ -50,14 +50,14 @@ export default function Settings() {
 const TabButton = ({ active, onClick, icon, label }) => (
     <button 
         onClick={onClick}
-        className={`flex items-center gap-3 w-full p-4 rounded-xl font-medium transition-all duration-200 text-left ${
+        className={`flex items-center gap-3 w-auto md:w-full p-3 md:p-4 rounded-xl font-medium transition-all duration-200 text-left whitespace-nowrap ${
             active 
             ? 'bg-primary/10 text-primary border border-primary/20 shadow-lg shadow-primary/5' 
             : 'text-text-secondary hover:bg-bg-hover hover:text-white'
         }`}
     >
         {icon}
-        {label}
+        <span className="text-sm md:text-base">{label}</span>
     </button>
 );
 
