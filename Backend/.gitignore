@@ -8,4 +8,7 @@ venv
 
 ai_generated_scene.py
 
-job_details
+
+scene_*.py
+
+media/
