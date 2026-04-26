@@ -39,9 +39,9 @@ export const useManim = () => {
         }
 
         updateState({ loading: true, error: null, videoUrl: null, currentPrompt: prompt });
-        
+
         try {
-            const response = await axios.post('http://localhost:8000/render', { prompt });
+            const response = await axios.post('https://eazystem.onrender.com/render', { prompt });
             const { jobId } = response.data;
 
             // Clear any existing interval
@@ -50,11 +50,11 @@ export const useManim = () => {
             // Polling for job status
             pollingInterval = setInterval(async () => {
                 try {
-                    const statusRes = await axios.get(`http://localhost:8000/status/${jobId}`);
+                    const statusRes = await axios.get(`https://eazystem.onrender.com/status/${jobId}`);
 
                     if (statusRes.data.state === 'COMPLETED') {
                         updateState({
-                            videoUrl: `http://localhost:8000${statusRes.data.videoUrl}`,
+                            videoUrl: `https://eazystem.onrender.com${statusRes.data.videoUrl}`,
                             loading: false
                         });
                         clearInterval(pollingInterval);
