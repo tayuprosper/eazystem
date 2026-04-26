@@ -1,5 +1,5 @@
 import {useState} from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import GradientButton from "../Components/ui/Button";
 import supabaseService from "../Services/supaBaseServices";
 import { Loader2 } from "lucide-react";
@@ -52,7 +52,7 @@ export default function Login() {
                 </GradientButton>
             </form>
             {/* sign up link */}
-            <p className="text-gray-600 mt-4">Don't have an account? <a href="/signup" className="text-primary font-semibold hover:underline">Sign up</a></p>
+            <p className="text-gray-600 mt-4">Don't have an account? <Link to="/signup" className="text-primary font-semibold hover:underline">Sign up</Link></p>
         </div>
     )
 }

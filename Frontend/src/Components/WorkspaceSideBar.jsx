@@ -49,10 +49,10 @@ export default function WorkspaceSideBar() {
                 <nav>
                     <ul className={`menu flex flex-col gap-4 p-4 ${isOpen ? "block" : "hidden"}`}>
                         {workspaceMenu.map((item) => (
-                            <Link to={item.path}> <li key={item.name} className={`menu-item flex items-center gap-3 p-2 rounded-lg cursor-pointer ${location.pathname === item.path ? "bg-primary text-white" : "hover:bg-bg-hover text-secondary"}`}>
+                            <Link to={item.path} key={item.name}> <li className={`menu-item flex items-center gap-3 p-2 rounded-lg cursor-pointer ${location.pathname === item.path ? "bg-primary text-white" : "hover:bg-bg-hover text-secondary"}`}>
                                 <item.icon />
                                 {item.name}
-                            </li>
+                            </li>   
                             </Link>
                         ))}
                     </ul>

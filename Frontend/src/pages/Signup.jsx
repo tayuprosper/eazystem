@@ -46,7 +46,7 @@ export default function Signup() {
                 </button>
             </form>
             {/* login link */}
-            <p className="text-gray-600 mt-4">Already have an account? <a href="/login" className="text-primary font-semibold hover:underline">Log in</a></p>
+            <p className="text-gray-600 mt-4">Already have an account? <Link to="/login" className="text-primary font-semibold hover:underline">Log in</Link    ></p>
         </div>
     )
 }

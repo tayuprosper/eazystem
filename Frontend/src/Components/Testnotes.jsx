@@ -26,6 +26,7 @@ export default function TestNotes() {
                     <li key={note.id}>{note.content}</li>
                 ))}
             </ul>
+            <p>Hello</p>
         </div>
     );
 }

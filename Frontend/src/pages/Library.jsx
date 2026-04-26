@@ -6,6 +6,7 @@ import {
 import Video from "../Components/ui/Video";
 import GradientButton from "../Components/ui/Button";
 import { videos } from "../../dummydata";
+import { Link } from "react-router-dom";
 
 export default function Library() {
     const [searchTerm, setSearchTerm] = React.useState('')
@@ -28,12 +29,12 @@ export default function Library() {
                     <p>Manage your saved videos and visualizations Here.</p>
                 </div>
                 <div className="left">
-                 <a href="/workspace">
+                 <Link to="/workspace">
                     <GradientButton className="bg-primary flex gap-3  text-white font-semibold py-2 px-4 rounded-lg hover:bg-primary-dark transition duration-300">
                         <PlusCircle className="ml-2" />
                         Generate New Explainer
                     </GradientButton>
-                 </a>
+                 </Link>
                 </div>
             </div>
 

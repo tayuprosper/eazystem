@@ -1,4 +1,14 @@
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+
 export default function Hero() {
+  const [prompt, setPrompt] = useState("");
+  const navigate = useNavigate();
+  const navigateToWorkspace = () => {
+    if(prompt.trim() !== "") {
+      navigate("/workspace");
+    }
+  };
   return (
     <section
       className="relative min-h-[85vh] flex items-center justify-center px-6 text-center overflow-hidden"
@@ -59,17 +69,21 @@ export default function Hero() {
               borderColor: "rgba(255,255,255,0.08)",
               color: "var(--text-primary)",
             }}
+            value={prompt}
+            onChange={(e)=>setPrompt(e.target.value)}
           />
 
-          <button
+          <button 
             className="px-6 py-4 rounded-xl font-medium text-white transition hover:opacity-90 whitespace-nowrap"
             style={{
               background:
                 "linear-gradient(90deg, var(--primary), var(--accent))",
               boxShadow: "0 0 40px rgba(59,130,246,0.35)",
             }}
+
+            onClick={navigateToWorkspace}
           >
-            Visualize ⚡
+            Visualize
           </button>
         </div>
 

@@ -4,16 +4,28 @@ import { useUser } from "../Context/userContext";
 
 export default function Navbar() {
   const [open, setOpen] = useState(false);
-  const [user, setUser] = useState(null)
   const { session, loading } = useUser()
+  const [navLinks, setNavLinks] = useState([
+    { name: "Features", path: "#features" },
+    { name: "Pricing", path: "#pricing" },
+    { name: "Docs", path: "#docs" }
+  ]);
 
+  // check if user is logged in when page loads so navbar adjusts automatically
   useEffect(() => {
-    if (loading) {
-      setUser(null);
+    if (loading) return;
+
+    if (session?.user) {
+      // User is logged in, ensure Dashboard link exists
+      if (!navLinks.some(link => link.name === "Dashboard")) {
+        setNavLinks(prev => [...prev, { name: "Dashboard", path: "/workspace" }]);
+      }
     } else {
-      setUser(user)
+      // User is logged out, ensure Dashboard link is removed
+      setNavLinks(prev => prev.filter(link => link.name !== "Dashboard"));
     }
-  }, [loading])
+  }, [loading, session])
+
 
   return (
     <nav
@@ -40,38 +52,39 @@ export default function Navbar() {
 
         {/* Desktop Links */}
         <div className="hidden md:flex items-center gap-8 text-sm">
-          <a
-            href="#features"
-            style={{ color: "var(--text-secondary)" }}
-            className="hover:text-white transition"
-          >
-            Features
-          </a>
-          <a
-            href="#pricing"
-            style={{ color: "var(--text-secondary)" }}
-            className="hover:text-white transition"
-          >
-            Pricing
-          </a>
-          <a
-            href="#docs"
-            style={{ color: "var(--text-secondary)" }}
-            className="hover:text-white transition"
-          >
-            Docs
-          </a>
+          {navLinks.map((link) => (
+            <Link
+              key={link.name}
+              to={link.path}
+              style={{ color: "var(--text-secondary)" }}
+              className="hover:text-white transition"
+            >
+              {link.name}
+            </Link>
+          ))}
 
           {/* CTA */}
-          <button
-            className="px-4 py-2 rounded-lg text-sm font-medium text-white transition hover:opacity-90"
-            style={{
-              background:
-                "linear-gradient(90deg, var(--primary), var(--accent))",
-            }}
-          >
-            <Link to={'/login'}>Get Started</Link>
-          </button>
+          {!session?.user ? (
+            <button
+              className="px-4 py-2 rounded-lg text-sm font-medium text-white transition hover:opacity-90"
+              style={{
+                background:
+                  "linear-gradient(90deg, var(--primary), var(--accent))",
+              }}
+            >
+              <Link to={'/login'}>Get Started</Link>
+            </button>
+          ) : (
+            <button
+              className="px-4 py-2 rounded-lg text-sm font-medium text-white transition hover:opacity-90"
+              style={{
+                background:
+                  "linear-gradient(90deg, var(--primary), var(--accent))",
+              }}
+            >
+              <Link to={'/workspace'}>Go to Workspace</Link>
+            </button>
+          )}
         </div>
 
         {/* Mobile Button */}
@@ -96,58 +109,41 @@ export default function Navbar() {
             borderTop: "1px solid var(--border-subtle)",
           }}
         >
-          <a
-            href="#features"
-            className="block"
-            style={{ color: "var(--text-secondary)" }}
-          >
-            Features
-          </a>
-          <a
-            href="#pricing"
-            className="block"
-            style={{ color: "var(--text-secondary)" }}
-          >
-            Pricing
-          </a>
-          <a
-            href="#docs"
-            className="block"
-            style={{ color: "var(--text-secondary)" }}
-          >
-            Docs
-          </a>
+          {navLinks.map((link) => (
+            <a
+              key={link.name}
+              href={link.path}
+              className="block"
+              style={{ color: "var(--text-secondary)" }}
+              onClick={() => setOpen(false)}
+            >
+              {link.name}
+            </a>
+          ))}
 
-          <button
-            className="w-full px-4 py-3 rounded-lg text-sm font-medium text-white transition hover:opacity-90"
-            style={{
-              background:
-                "linear-gradient(90deg, var(--primary), var(--accent))",
-            }}
-          >
-            <Link to={'/login'} className="block w-full text-center">Get Started</Link>
-          </button>
+          {!session?.user ? (
+            <button
+              className="w-full px-4 py-3 rounded-lg text-sm font-medium text-white transition hover:opacity-90"
+              style={{
+                background:
+                  "linear-gradient(90deg, var(--primary), var(--accent))",
+              }}
+            >
+              <Link to={'/login'} className="block w-full text-center" onClick={() => setOpen(false)}>Get Started</Link>
+            </button>
+          ) : (
+            <button
+              className="w-full px-4 py-3 rounded-lg text-sm font-medium text-white transition hover:opacity-90"
+              style={{
+                background:
+                  "linear-gradient(90deg, var(--primary), var(--accent))",
+              }}
+            >
+              <Link to={'/workspace'} className="block w-full text-center" onClick={() => setOpen(false)}>Go to Workspace</Link>
+            </button>
+          )}
         </div>
       )}
     </nav>
   );
 }
-
-
-
-// const getInfo = ()=>{
-//   return {
-//     name:"EazyStem",
-//     description:"EazyStem is an AI-powered platform that simplifies the process of building and deploying machine learning models. With EazyStem, you can easily create, train, and deploy your models without needing extensive coding knowledge. Our intuitive interface and powerful tools make it easy for anyone to harness the power of AI and bring their ideas to life."
-//   }
-// }
-
-
-// const  useInfo = ({name, description}) => {
-//       return <div>{name}{des} </div>
-//   }
-
-// useInfo({name: "EazyStem", description: "EazyStem he power of AI and bring their ideas to life."})
-
-// <useInfo name="" desc=""/>
-// <useInfo name="" desc=""/>

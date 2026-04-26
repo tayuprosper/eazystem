@@ -11,7 +11,6 @@ function Home() {
             <Hero />
             <FeaturedVideos />
             <Stats />
-            <TestNotes />
         </div>
     )
 }
