@@ -38,6 +38,16 @@ export const resetManimState = () => {
     notifyListeners();
 };
 
+// cancelGeneration — stops the active poll and returns the UI to idle state.
+export const cancelGeneration = () => {
+    if (pollingInterval) {
+        clearInterval(pollingInterval);
+        pollingInterval = null;
+    }
+    globalState = { ...INITIAL_STATE };
+    notifyListeners();
+};
+
 // ---------------------------------------------------------------------------
 // Hook
 // ---------------------------------------------------------------------------

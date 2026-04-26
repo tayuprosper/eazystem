@@ -7,37 +7,37 @@ export default function Settings() {
     const [activeTab, setActiveTab] = useState('profile');
     
     return (
-        <div className="workspace-section text-text-primary p-4 md:p-8 mx-auto h-full">
-            <div className="mb-8">
-                <h1 className="text-3xl font-bold text-primary mb-2">Settings</h1>
-                <p className="text-text-secondary">Manage your account, rendering preferences, and billing.</p>
+        <div className="px-3 py-4 md:px-6 md:py-8 min-h-full text-text-primary">
+            <div className="mb-6">
+                <h1 className="text-2xl md:text-3xl font-bold text-blue-400 mb-1">Settings</h1>
+                <p className="text-zinc-500 text-sm">Manage your account, rendering preferences, and billing.</p>
             </div>
 
-            <div className="flex flex-col md:flex-row gap-8 min-h-[calc(100vh-12rem)] pb-20">
-                {/* Sidebar */}
-                <div className="w-full md:w-64 flex flex-row md:flex-col gap-2 shrink-0 overflow-x-auto md:overflow-x-visible pb-4 md:pb-0 no-scrollbar">
-                    <TabButton 
-                        active={activeTab === 'profile'} 
-                        onClick={() => setActiveTab('profile')} 
-                        icon={<User size={20} />} 
-                        label="Profile" 
+            <div className="flex flex-col md:flex-row gap-6 pb-20">
+                {/* Sidebar — scrolls horizontally on mobile */}
+                <div className="flex flex-row md:flex-col gap-2 shrink-0 overflow-x-auto pb-1 md:pb-0 md:w-52 no-scrollbar">
+                    <TabButton
+                        active={activeTab === 'profile'}
+                        onClick={() => setActiveTab('profile')}
+                        icon={<User size={18} />}
+                        label="Profile"
                     />
-                    <TabButton 
-                        active={activeTab === 'preferences'} 
-                        onClick={() => setActiveTab('preferences')} 
-                        icon={<Settings2 size={20} />} 
-                        label="Preferences" 
+                    <TabButton
+                        active={activeTab === 'preferences'}
+                        onClick={() => setActiveTab('preferences')}
+                        icon={<Settings2 size={18} />}
+                        label="Preferences"
                     />
-                    <TabButton 
-                        active={activeTab === 'billing'} 
-                        onClick={() => setActiveTab('billing')} 
-                        icon={<CreditCard size={20} />} 
-                        label="Billing" 
+                    <TabButton
+                        active={activeTab === 'billing'}
+                        onClick={() => setActiveTab('billing')}
+                        icon={<CreditCard size={18} />}
+                        label="Billing"
                     />
                 </div>
 
-                {/* Content Pane */}
-                <div className="flex-1 bg-bg-secondary border border-border-subtle rounded-2xl p-6 md:p-10 shadow-2xl">
+                {/* Content pane */}
+                <div className="flex-1 bg-zinc-900/60 border border-zinc-800 rounded-2xl p-5 md:p-8 shadow-xl min-w-0">
                     {activeTab === 'profile' && <ProfileSettings />}
                     {activeTab === 'preferences' && <PreferenceSettings />}
                     {activeTab === 'billing' && <BillingSettings />}
@@ -48,16 +48,18 @@ export default function Settings() {
 }
 
 const TabButton = ({ active, onClick, icon, label }) => (
-    <button 
+    <button
         onClick={onClick}
-        className={`flex items-center gap-3 w-auto md:w-full p-3 md:p-4 rounded-xl font-medium transition-all duration-200 text-left whitespace-nowrap ${
-            active 
-            ? 'bg-primary/10 text-primary border border-primary/20 shadow-lg shadow-primary/5' 
-            : 'text-text-secondary hover:bg-bg-hover hover:text-white'
+        className={`flex items-center gap-2 shrink-0 p-3 md:p-3.5 rounded-xl font-medium
+                    transition-all duration-200 text-left whitespace-nowrap text-sm
+                    md:w-full ${
+            active
+                ? 'bg-blue-500/10 text-blue-400 border border-blue-500/25 shadow-lg shadow-blue-500/5'
+                : 'text-zinc-400 hover:bg-zinc-800 hover:text-zinc-200 border border-transparent'
         }`}
     >
         {icon}
-        <span className="text-sm md:text-base">{label}</span>
+        <span>{label}</span>
     </button>
 );
 
@@ -194,9 +196,9 @@ const BillingSettings = () => {
                     <p className="text-xs text-text-muted">Resets on May 1st, 2026</p>
                 </div>
 
-                <div className="flex gap-4">
-                    <GradientButton className="w-auto px-6">Manage Subscription</GradientButton>
-                    <button className="px-6 py-4 rounded-xl font-medium border border-border-subtle hover:bg-bg-tertiary transition text-text-secondary">
+                <div className="flex flex-col sm:flex-row gap-3">
+                    <GradientButton className="w-full sm:w-auto px-6">Manage Subscription</GradientButton>
+                    <button className="w-full sm:w-auto px-6 py-3 rounded-xl font-medium border border-zinc-700 hover:bg-zinc-800 transition text-zinc-400 text-sm">
                         View Invoices
                     </button>
                 </div>

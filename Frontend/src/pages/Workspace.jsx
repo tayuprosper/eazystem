@@ -3,12 +3,14 @@ import {
     Paperclip,
     SendHorizonal,
     Lightbulb,
-    MessageCircleMore
+    MessageCircleMore,
+    Loader2,
+    X,
 } from 'lucide-react';
 
 import { useParams } from 'react-router-dom';
 import { useEffect, useState } from 'react';
-import { useManim, resetManimState } from '../Hooks/useManim';
+import { useManim, resetManimState, cancelGeneration } from '../Hooks/useManim';
 
 export default function Workspace() {
     const { prompt } = useParams();
@@ -19,8 +21,6 @@ export default function Workspace() {
     };
 
     // On mount: if there is no URL prompt this is a fresh workspace session.
-    // Reset any leftover state from a previous session to avoid showing
-    // a stale video or error that belongs to a different topic.
     useEffect(() => {
         if (!prompt) {
             resetManimState();
@@ -29,7 +29,7 @@ export default function Workspace() {
 
     useEffect(() => {
         if (error) {
-            alert("Failed to generate video: " + error);
+            alert('Failed to generate video: ' + error);
         }
     }, [error]);
 
@@ -40,92 +40,165 @@ export default function Workspace() {
     }, [prompt]);
 
     return (
-        <div className="min-h-screen bg-[#05070a] text-zinc-300 p-2 md:p-8">
+        <div className="flex flex-col gap-4 px-3 py-4 md:px-6 md:py-8 min-h-full">
 
-            {/* LEFT COLUMN (Main Content - 8 Columns) */}
-            <div className="flex flex-col gap-4 md:gap-6 py-6 md:py-20 rounded-3xl shadow-xl">
+            {/* Video / Loading / Idle area */}
+            {!loading && videoUrl ? (
+                <PlayingVideo src={videoUrl} />
+            ) : loading ? (
+                <LoadingState />
+            ) : (
+                <IdleState />
+            )}
 
-
-                {!loading && videoUrl ? (
-                    <PlayingVideo src={videoUrl} />
-                ) : loading ? (
-                    <div className="flex items-center justify-center h-[30vh] md:h-[40vh] bg-zinc-900 border border-zinc-800 rounded-3xl">
-                        <Play className="animate-pulse text-blue-500" size={48} />
-                    </div>
-                ) : (
-                    <div className="flex flex-col items-center justify-center h-[30vh] md:h-[40vh] bg-zinc-900 border border-zinc-800 rounded-3xl gap-4 p-6 text-center">
-                        <Lightbulb size={32} className="text-yellow-400 shrink-0" />
-                        <p className="text-zinc-500 text-sm">Enter a prompt to generate a video</p>
-                    </div>
-                )}
-
-                {/* Chat Input Section */}
-                {!loading && (
-                    <ChatInput videoPlaying={!!videoUrl} generate={generateVideoFromPrompt} />
-                )}
-            </div>
+            {/* Chat input — always visible, but label changes */}
+            <ChatInput videoPlaying={!!videoUrl} loading={loading} generate={generateVideoFromPrompt} />
 
         </div>
-    )
+    );
 }
 
+/* ─────────────────────────────────────────────────────────────── */
+/*  Sub-components                                                  */
+/* ─────────────────────────────────────────────────────────────── */
 
+const IdleState = () => (
+    <div className="flex flex-col items-center justify-center
+                    h-[30vh] sm:h-[40vh] md:h-[45vh]
+                    bg-zinc-900/60 border border-zinc-800 rounded-2xl
+                    gap-3 p-6 text-center">
+        <Lightbulb size={32} className="text-yellow-400 shrink-0" />
+        <p className="text-zinc-400 text-sm leading-relaxed max-w-xs">
+            Enter a topic below and EazyStem will generate a <span className="text-blue-400 font-medium">3Blue1Brown-style</span> lesson video for you.
+        </p>
+    </div>
+);
 
-const ChatInput = ({ videoPlaying, generate }) => {
-    const [input, setInput] = useState("");
+const LoadingState = () => (
+    <div className="flex flex-col items-center justify-center gap-4
+                    h-[30vh] sm:h-[40vh] md:h-[45vh]
+                    bg-zinc-900/60 border border-dashed border-zinc-700 rounded-2xl
+                    p-6 text-center">
+
+        {/* Animated icon */}
+        <div className="relative flex items-center justify-center w-16 h-16">
+            <span className="absolute inline-flex h-full w-full rounded-full bg-blue-500/20 animate-ping" />
+            <Loader2 size={32} className="text-blue-400 animate-spin relative z-10" />
+        </div>
+
+        <div className="space-y-1">
+            <p className="text-zinc-200 font-semibold text-sm">Generating your lesson…</p>
+            <p className="text-zinc-500 text-xs">This can take up to 2 minutes. Hang tight!</p>
+        </div>
+
+        {/* Cancel button */}
+        <button
+            onClick={cancelGeneration}
+            className="mt-2 flex items-center gap-2 px-4 py-2 rounded-lg
+                       border border-zinc-700 text-zinc-400 text-sm
+                       hover:border-red-500/60 hover:text-red-400
+                       transition-colors duration-200"
+        >
+            <X size={15} />
+            Cancel generation
+        </button>
+    </div>
+);
+
+const PlayingVideo = ({ src }) => (
+    <div className="relative w-full rounded-2xl overflow-hidden
+                    bg-zinc-900 border border-zinc-800 shadow-2xl
+                    aspect-video">
+        <video
+            className="w-full h-full object-contain"
+            controls
+            autoPlay
+        >
+            <source src={src} type="video/mp4" />
+        </video>
+    </div>
+);
+
+const ChatInput = ({ videoPlaying, loading, generate }) => {
+    const [input, setInput] = useState('');
+
+    const handleSend = () => {
+        if (!input.trim()) return;
+        generate(input.trim());
+        setInput('');
+    };
+
+    const handleKeyDown = (e) => {
+        // Ctrl/Cmd+Enter submits
+        if ((e.ctrlKey || e.metaKey) && e.key === 'Enter') {
+            handleSend();
+        }
+    };
+
     return (
-        <div className="bg-[#0b101b] rounded-2xl p-4 md:p-6 mt-4 md:mt-6 border border-zinc-800/50 shadow-lg mx-2 md:mx-0">
-            <div className="flex items-center gap-2 mb-4">
-                {videoPlaying ? (
-                    <> <MessageCircleMore className="text-blue-400 w-5 h-5 shrink-0" />
+        <div className="bg-zinc-900/80 border border-zinc-800/60 rounded-2xl p-4 md:p-5 shadow-xl backdrop-blur-sm">
 
-                        <h3 className="text-zinc-100 font-semibold text-sm">Ask a Follow-up</h3>
-                    </>
-                ) : null}
-            </div>
+            {/* Label row */}
+            {videoPlaying && (
+                <div className="flex items-center gap-2 mb-3">
+                    <MessageCircleMore className="text-blue-400 shrink-0" size={18} />
+                    <span className="text-zinc-200 font-semibold text-sm">Ask a Follow-up</span>
+                </div>
+            )}
 
-            <div className="relative group flex flex-col md:block">
+            {/* Textarea */}
+            <div className="relative">
                 <textarea
-                    placeholder="Ask the AI assistant about the video, formulas, or concepts..."
-                    className="w-full bg-[#05070a]/50 border border-zinc-800 rounded-xl p-4 md:pr-32 min-h-[120px] md:min-h-[100px] text-zinc-300 placeholder:text-zinc-600 focus:outline-none focus:ring-1 focus:ring-blue-500/50 transition-all resize-none pb-14 md:pb-4"
+                    id="workspace-chat-input"
+                    placeholder={
+                        loading
+                            ? 'Generating… you can queue the next topic here'
+                            : videoPlaying
+                                ? 'Ask about the video, formulas, or concepts…'
+                                : 'Enter an educational topic, e.g. "How does Fourier Transform work?"'
+                    }
+                    className="w-full bg-zinc-950/70 border border-zinc-700/60 rounded-xl
+                               p-4 pr-4 pb-14
+                               text-sm text-zinc-200 placeholder:text-zinc-600
+                               focus:outline-none focus:ring-1 focus:ring-blue-500/50
+                               transition-all resize-none min-h-[110px] md:min-h-[100px]"
                     value={input}
                     onChange={(e) => setInput(e.target.value)}
+                    onKeyDown={handleKeyDown}
                 />
 
-                {/* Actions bar inside the textarea */}
-                <div className="absolute bottom-3 right-3 left-3 md:left-auto flex items-center justify-between md:justify-end gap-3">
-                    <button className="text-zinc-500 hover:text-zinc-300 transition-colors p-2">
-                        <Paperclip size={20} />
+                {/* Action bar pinned to textarea bottom */}
+                <div className="absolute bottom-3 left-3 right-3 flex items-center justify-between gap-2">
+                    <button
+                        className="text-zinc-600 hover:text-zinc-400 transition-colors p-1.5 rounded-lg hover:bg-zinc-800"
+                        title="Attach file (coming soon)"
+                    >
+                        <Paperclip size={18} />
                     </button>
 
-                    <button className="flex items-center gap-2 bg-blue-600 hover:bg-blue-500 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors shadow-blue-500/20 shadow-lg"
-                        disabled={input.trim() === ""}
-                        onClick={() => generate(input)}
-                    >
-                        <span>Send</span>
-                        <SendHorizonal size={16} />
-                    </button>
+                    <div className="flex items-center gap-2">
+                        <span className="text-zinc-700 text-xs hidden sm:block">
+                            {loading ? '' : 'Ctrl+↵ to send'}
+                        </span>
+                        <button
+                            id="workspace-send-btn"
+                            className="flex items-center gap-2 bg-blue-600 hover:bg-blue-500
+                                       disabled:opacity-40 disabled:cursor-not-allowed
+                                       text-white px-4 py-2 rounded-lg text-sm font-medium
+                                       transition-all shadow-blue-600/20 shadow-lg"
+                            disabled={input.trim() === '' || loading}
+                            onClick={handleSend}
+                        >
+                            <span>{loading ? 'Queued' : 'Generate'}</span>
+                            <SendHorizonal size={15} />
+                        </button>
+                    </div>
                 </div>
             </div>
 
-            <p className="text-center text-[10px] uppercase tracking-widest text-zinc-600 mt-4 font-medium">
-                AI Assistant is ready to help with formulas and concepts
+            <p className="text-center text-[10px] uppercase tracking-widest text-zinc-700 mt-3 font-medium">
+                EazyStem · Powered by Gemini + Manim
             </p>
         </div>
     );
 };
-
-
-
-
-const PlayingVideo = ({ src }) => {
-    return (
-        <div className="relative w-full aspect-video h-auto md:h-[40vh] max-h-[50vh] rounded-2xl md:rounded-3xl overflow-hidden bg-zinc-900 border border-zinc-800 shadow-2xl group mx-auto">
-            <video
-                className="w-full h-full object-contain transition-opacity"
-                controls>
-                <source src={src} type='video/mp4' />
-            </video>
-        </div>
-    )
-}
