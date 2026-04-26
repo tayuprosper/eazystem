@@ -1,1 +1,11 @@
 /media
+
+__pycache__
+
+venv
+
+.env
+
+ai_generated_scene.py
+
+job_details
