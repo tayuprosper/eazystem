@@ -23,7 +23,7 @@ app = FastAPI(title="Eazystem Backend API")
 # 1. Enable CORS for React Frontend
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:5173"], 
+    allow_origins=["*"],
     allow_methods=["*"],
     allow_headers=["*"],
 )
