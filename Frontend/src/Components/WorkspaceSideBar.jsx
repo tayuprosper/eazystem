@@ -34,36 +34,46 @@ export default function WorkspaceSideBar() {
         return supabaseService.signOut();
     }
     return (
-        <div className="nav bg-bg-secondary w-fit w-max-[15vw] h-screen z-50 flex flex-col">
-            <div className="top">
-                <div className="head flex items-center justify-between p-4 border-b gap-10">
-                    <div className={`logo ${isOpen ? "block" : "hidden"}`}>
-                        <h1 className={`text-2xl font-bold text-primary`}>EazyStem</h1>
+        <>
+            {/* Mobile Overlay */}
+            {isOpen && (
+                <div 
+                    className="fixed inset-0 bg-black/50 z-40 md:hidden"
+                    onClick={toggleSidebar}
+                />
+            )}
+            <div className={`nav bg-bg-secondary h-screen z-50 flex flex-col fixed md:relative transition-all duration-300 border-r border-zinc-800 ${isOpen ? "w-[75vw] md:w-64" : "w-16"}`}>
+                <div className="top flex-1">
+                    <div className={`head flex items-center p-4 border-b border-zinc-800/50 h-[88px] ${isOpen ? "justify-between gap-4" : "justify-center"}`}>
+                        <div className={`logo ${isOpen ? "block" : "hidden"}`}>
+                            <h1 className="text-xl md:text-2xl font-bold text-primary truncate">EazyStem</h1>
+                        </div>
+                        <div className="menu-control cursor-pointer text-zinc-400 hover:text-zinc-100 transition-colors">
+                            {
+                                isOpen ? <X onClick={toggleSidebar} /> : <Menu onClick={toggleSidebar} />
+                            }
+                        </div>
                     </div>
-                    <div className="menu-control">
-                        {
-                            isOpen ? <X onClick={toggleSidebar} /> : <Menu onClick={toggleSidebar} />
-                        }
+                    <nav>
+                        <ul className="menu flex flex-col gap-2 p-4">
+                            {workspaceMenu.map((item) => (
+                                <Link to={item.path} key={item.name} title={item.name}>
+                                    <li className={`menu-item flex items-center gap-3 p-3 rounded-xl cursor-pointer transition-colors ${location.pathname === item.path ? "bg-primary text-white shadow-lg shadow-primary/20" : "hover:bg-zinc-800/50 text-zinc-400 hover:text-zinc-200"} ${isOpen ? "" : "justify-center"}`}>
+                                        <item.icon size={20} className="shrink-0" />
+                                        {isOpen && <span className="font-medium truncate">{item.name}</span>}
+                                    </li>   
+                                </Link>
+                            ))}
+                        </ul>
+                    </nav>
+                </div>
+                <div className="bottom p-4 border-t border-zinc-800/50">
+                    <div className={`menu-item flex items-center gap-3 p-3 rounded-xl cursor-pointer hover:bg-zinc-800/50 text-zinc-400 hover:text-red-400 transition-colors ${isOpen ? "" : "justify-center"}`} onClick={handleLogout} title="Logout">
+                        <LogOutIcon size={20} className="shrink-0" />
+                        {isOpen && <Link to="/logout" className="font-medium truncate">Logout</Link>}
                     </div>
                 </div>
-                <nav>
-                    <ul className={`menu flex flex-col gap-4 p-4 ${isOpen ? "block" : "hidden"}`}>
-                        {workspaceMenu.map((item) => (
-                            <Link to={item.path} key={item.name}> <li className={`menu-item flex items-center gap-3 p-2 rounded-lg cursor-pointer ${location.pathname === item.path ? "bg-primary text-white" : "hover:bg-bg-hover text-secondary"}`}>
-                                <item.icon />
-                                {item.name}
-                            </li>   
-                            </Link>
-                        ))}
-                    </ul>
-                </nav>
             </div>
-            <div className={`bottom mt-auto p-4 ${isOpen ? "block" : "hidden"}`}>
-                <div className="menu-item flex items-center gap-3 p-2 rounded-lg cursor-pointer hover:bg-bg-hover text-secondary">
-                    <LogOutIcon />
-                    <Link to="/logout" onClick={handleLogout}>Logout</Link>
-                </div>
-            </div>
-        </div>
+        </>
     );
 }

@@ -20,17 +20,16 @@ export default function WorkSpaceLayout() {
 
     const user = session.user;
     return (
-        <div className="workspace-layout flex bg-background">
+        <div className="workspace-layout flex bg-background relative w-full h-screen overflow-hidden">
             <WorkspaceSideBar />
-            <div className="main-content w-full h-screen overflow-scroll p-6">
-                <div className="header">
-                    <div className="bg-secondary p-6 navbr flex items-center justify-between mb-6">
-                        <h1 className="text-2xl font-bold">Your Workspace</h1>
-                        <div className="profile rounded-lg p-2 flex items-center gap-4 font-bold bg-primary text-bg-secondary">
+            <div className="main-content flex-1 h-screen overflow-y-auto p-4 md:p-6 ml-16 md:ml-0 transition-all duration-300">
+                <div className="header w-full">
+                    <div className="bg-secondary p-4 md:p-6 rounded-2xl flex flex-wrap gap-4 items-center justify-between mb-6 border border-zinc-800/50 shadow-sm">
+                        <h1 className="text-xl md:text-2xl font-bold text-zinc-100">Your Workspace</h1>
+                        <div className="profile rounded-xl p-2 pr-4 flex items-center gap-3 font-medium bg-primary/10 text-zinc-200 border border-primary/20">
                             {/* username */}
-                            <img src="https://picsum.photos/40" alt="Profile" className="w-10 h-10 rounded-full" />
-                            <span className="text-secondary mr-4">{user.email}</span> 
-                            
+                            <img src="https://picsum.photos/40" alt="Profile" className="w-8 h-8 md:w-10 md:h-10 rounded-full shadow-sm" />
+                            <span className="text-sm md:text-base truncate max-w-[120px] md:max-w-[200px]">{user.email}</span> 
                         </div>
                     </div>
                 </div>
