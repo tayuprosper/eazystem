@@ -66,6 +66,13 @@ export const useManim = () => {
                         });
                         clearInterval(pollingInterval);
                         pollingInterval = null;
+                    } else if (statusRes.data.state === 'NOT_FOUND') {
+                        updateState({
+                            error: 'Server restarted and the video job was lost. Please try again.',
+                            loading: false
+                        });
+                        clearInterval(pollingInterval);
+                        pollingInterval = null;
                     }
                 } catch (pollErr) {
                     console.error("Polling error:", pollErr);
