@@ -14,7 +14,7 @@ import { useManim, resetManimState, cancelGeneration } from '../Hooks/useManim';
 
 export default function Workspace() {
     const { prompt } = useParams();
-    const { loading, error, videoUrl, generateVideo } = useManim();
+    const { loading, error, videoUrl, currentPrompt, generateVideo } = useManim();
 
     const generateVideoFromPrompt = async (text) => {
         if (text) await generateVideo(text);
@@ -22,7 +22,7 @@ export default function Workspace() {
 
     // On mount: if there is no URL prompt this is a fresh workspace session.
     useEffect(() => {
-        if (!prompt) {
+        if (!currentPrompt) {
             resetManimState();
         }
     }, []);

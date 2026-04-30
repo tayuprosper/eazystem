@@ -93,6 +93,7 @@ SECTION 2 — MANIM CE SYNTAX (CRASH PREVENTION)
 - Dot() takes a point argument: Dot(point=axes.c2p(x, y)) — always pass as keyword.
 - Line(start, end) takes positional args, not keywords.
 - NEVER use .to_center() — use .move_to(ORIGIN) instead.
+- NEVER allow content on the screen to overflow out of screen.
 - NEVER use arrange_in_grid() as a VGroup method — use VGroup.arrange_in_grid(rows, cols) or arrange() instead. For complex layouts, manually position with .move_to() or next_to().
 
 ==============================================================
