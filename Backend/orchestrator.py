@@ -136,7 +136,7 @@ Clear screen with FadeOut(*self.mobjects) between phases.
         )
     
     response = client.models.generate_content(
-        model="gemini-2.0-pro-exp-02-05",
+        model="gemini-3.1-pro-preview",
         contents=full_prompt,
     )
     
