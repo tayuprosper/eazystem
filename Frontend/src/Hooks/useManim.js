@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import axios from 'axios';
 
+const API_BASE_URL = 'https://eazystem.onrender.com'; // Update with your backend URL
 // ---------------------------------------------------------------------------
 // Module-level global state — shared across all mounted instances of useManim
 // so that polling continues even if the component re-renders.
@@ -55,17 +56,27 @@ export const useManim = () => {
     const [state, setState] = useState(globalState);
 
     useEffect(() => {
-        // Subscribe to global state changes
-        listeners.push(setState);
-        // Always sync with the current global state on mount so the subscriber
-        // immediately reflects what's happening (e.g. an in-progress poll).
-        setState({ ...globalState });
-        return () => {
-            listeners = listeners.filter(l => l !== setState);
+        const doWork = () => {
+            listeners.push(setState);
+            setState({ ...globalState });
+            return () => {
+                listeners = listeners.filter(l => l !== setState);
+            };
         };
+        doWork();
     }, []);
 
-    const generateVideo = async (prompt) => {
+    // NEW: Function to manually set the state for an existing video
+    const setVideoData = (videoUrl, prompt = null) => {
+        updateState({
+            videoUrl: videoUrl,
+            currentPrompt: prompt,
+            loading: false,
+            error: null
+        });
+    };
+
+    const generateVideo = async (prompt, userId) => {
         // Prevent duplicate generation for the same prompt if already loading or completed
         if (globalState.currentPrompt === prompt && (globalState.loading || globalState.videoUrl)) {
             return;
@@ -79,18 +90,25 @@ export const useManim = () => {
 
         updateState({ loading: true, error: null, videoUrl: null, currentPrompt: prompt });
 
+        if (!userId) {
+            console.error("userId is missing! Cannot start render.");
+            updateState({ error: "User ID is required to generate videos.", loading: false });
+            return;
+        }
+
         try {
-            const response = await axios.post('https://eazystem.onrender.com/render', { prompt });
+            // Step 1: Request video generation with prompt and user id for uploading to supabase
+            const response = await axios.post(`${API_BASE_URL}/render`, { "prompt": prompt, "userId": userId });
             const { jobId } = response.data;
 
             // Polling for job status
             pollingInterval = setInterval(async () => {
                 try {
-                    const statusRes = await axios.get(`https://eazystem.onrender.com/status/${jobId}`);
+                    const statusRes = await axios.get(`${API_BASE_URL}/status/${jobId}`);
 
                     if (statusRes.data.state === 'COMPLETED') {
                         updateState({
-                            videoUrl: `https://eazystem.onrender.com${statusRes.data.videoUrl}`,
+                            videoUrl: `${statusRes.data.videoUrl}`,
                             loading: false,
                         });
                         clearInterval(pollingInterval);
@@ -122,5 +140,5 @@ export const useManim = () => {
         }
     };
 
-    return { ...state, generateVideo };
+    return { ...state, generateVideo, setVideoData };
 };

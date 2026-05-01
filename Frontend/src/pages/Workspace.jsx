@@ -11,13 +11,15 @@ import {
 import { useParams } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import { useManim, resetManimState, cancelGeneration } from '../Hooks/useManim';
+import { useUser } from '../Context/userContext';
 
 export default function Workspace() {
     const { prompt } = useParams();
     const { loading, error, videoUrl, currentPrompt, generateVideo } = useManim();
+    const { session } = useUser();
 
     const generateVideoFromPrompt = async (text) => {
-        if (text) await generateVideo(text);
+        if (text) await generateVideo(text, session.user.id);
     };
 
     // On mount: if there is no URL prompt this is a fresh workspace session.
@@ -35,7 +37,7 @@ export default function Workspace() {
 
     useEffect(() => {
         if (prompt) {
-            generateVideo(prompt);
+            generateVideo(prompt, session.user.id);
         }
     }, [prompt]);
 
