@@ -14,9 +14,14 @@ COPY requirements.txt .
 RUN pip install --upgrade pip
 RUN pip install --no-cache-dir -r requirements.txt
 
+# Copy application
 COPY . .
 
-RUN mkdir -p media && chown -R manimuser:manimuser media
+# Create necessary directories and fix permissions
+RUN mkdir -p media \
+    && touch jobs.json \
+    && chmod 666 jobs.json \
+    && chown -R manimuser:manimuser /app
 
 EXPOSE 8000
 
