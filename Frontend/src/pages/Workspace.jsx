@@ -163,14 +163,14 @@ const ChatInput = ({ videoPlaying, loading, generate }) => {
                                p-4 pr-4 pb-14
                                text-sm text-zinc-200 placeholder:text-zinc-600
                                focus:outline-none focus:ring-1 focus:ring-blue-500/50
-                               transition-all resize-none min-h-[110px] md:min-h-[100px]"
+                               transition-all resize-none min-h-27.5 md:min-h-25"
                     value={input}
                     onChange={(e) => setInput(e.target.value)}
                     onKeyDown={handleKeyDown}
                 />
 
                 {/* Action bar pinned to textarea bottom */}
-                <div className="absolute bottom-3 left-3 right-3 flex items-center justify-between gap-2">
+                <div className=" bottom-3 mt-4 left-3 right-3 flex items-center justify-between gap-2">
                     <button
                         className="text-zinc-600 hover:text-zinc-400 transition-colors p-1.5 rounded-lg hover:bg-zinc-800"
                         title="Attach file (coming soon)"

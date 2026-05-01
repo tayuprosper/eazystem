@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import axios from 'axios';
 
-const API_BASE_URL = 'https://eazystem.onrender.com'; // Update with your backend URL
+const API_BASE_URL = 'http://localhost:8000'; 
 // ---------------------------------------------------------------------------
 // Module-level global state — shared across all mounted instances of useManim
 // so that polling continues even if the component re-renders.
