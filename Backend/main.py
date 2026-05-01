@@ -3,16 +3,17 @@ import subprocess
 import os
 import sys
 
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 
 from fastapi import FastAPI, BackgroundTasks
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel
 
-from .services.job_manager import load_jobs, save_jobs
-from .services.manim_generrator import generate_manim_code
-from .services.file_upload import upload_file_to_supabase
-from .services.data_upload import upload_video_data_to_supabase
+from services.job_manager import load_jobs, save_jobs
+from services.manim_generrator import generate_manim_code
+from services.file_upload import upload_file_to_supabase
+from services.data_upload import upload_video_data_to_supabase
 
 app = FastAPI(title="Eazystem Backend API")
 
