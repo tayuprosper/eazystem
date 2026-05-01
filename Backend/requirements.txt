@@ -19,6 +19,7 @@ fsspec==2026.4.0
 glcontext==3.0.0
 google-auth==2.49.1
 google-genai==1.70.0
+groq==1.2.0
 h11==0.16.0
 h2==4.3.0
 hpack==4.1.0
