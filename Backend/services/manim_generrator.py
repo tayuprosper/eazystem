@@ -1,4 +1,4 @@
-from Backend.config import groq_client
+from config import groq_client
 SYSTEM_PROMPT = """
 You are an expert Manim CE developer creating clean, professional 3Blue1Brown-style math animations.
 
